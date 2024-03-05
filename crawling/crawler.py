@@ -15,7 +15,7 @@ from bs4 import BeautifulSoup
 URL = 'https://naver.com'
 
 response = requests.get(URL)
-print(response)
+#print(response)
 # https://developer.mozilla.org/ko/docs/Web/HTTP/Status -> HTTP 상태 코드 정보
 # 100번대 추가 요청 기다림
 # 200번대 성공
@@ -26,6 +26,31 @@ print(response)
 if response.status_code == 200:
     html = response.text
     soup = BeautifulSoup(html, 'html.parser')
-    print(soup)
+    a_list = soup.find_all('a')
+    # print(a_list)
 else :
     print(response.status_code)
+    
+from selenium import webdriver
+from selenium.webdriver import ActionChains
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+import time
+
+driver = webdriver.Chrome()
+time.sleep(3)
+
+driver.get(URL)
+time.sleep(3)
+
+search_input = driver.find_element(By.ID, 'query')
+search_input.send_keys('제네시스')
+time.sleep(3)
+search_input.send_keys(Keys.ENTER)
+time.sleep(3)
+
+news_button = driver.find_element(By.CSS_SELECTOR, '#lnb > div.lnb_group > div > div.lnb_nav_area._nav_area_root > div > div.api_flicking_wrap._conveyer_root > div:nth-child(8) > a')
+time.sleep(1)
+
+ActionChains(driver).click(news_button).perform()
+time.sleep(5)
